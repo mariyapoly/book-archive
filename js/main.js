@@ -1,41 +1,71 @@
+// spinner
+document.getElementById('spinner').style.display = 'none';
+// display error
+document.getElementById('error-message').style.display = 'none';
 // function for data load
 const loadData = () => {
     const inputField = document.getElementById('input-field').value;
+    // clear displaying data
     document.getElementById('input-field').value = '';
     document.getElementById('book-container').textContent = '';
+    document.getElementById('type-error').innerHTML = '';
+    document.getElementById('book-search').innerHTML = '';
+    document.getElementById('error-message').style.display = 'none';
+    // show spinner
+    document.getElementById('spinner').style.display = 'block';
+    // call function
     loadBook(inputField);
     loadBookData(inputField);
 }
+
 // function for load book data fetch
 const loadBook = inputField => {
     const url = `https://openlibrary.org/search.json?q=${inputField}`;
     fetch(url)
         .then(res => res.json())
         .then(data => totalBook(data.numFound))
+        .catch(error => displayError(error));
 }
 
 // function for searching total book result
 const totalBook = totalbook => {
     const searchBook = document.getElementById('book-search');
     searchBook.innerHTML = `
-        <p class="text-center">searching match result ${totalbook} but show ${18}</p>
+        <p class="text-center">Total Search Results ${totalbook}</p>
     `
+    // type error handle
+    const error = document.getElementById('type-error');
+    if (totalbook === 0) {
+        error.innerHTML = `
+            <p class="text-center text-danger">Dear Sir/Mem your search result is not found</p>
+        `
+        document.getElementById('book-search').style.display = 'none';
+    }
+    // hide spinner
+    document.getElementById('spinner').style.display = 'none';
 }
+
 // function for load book data fetching
 const loadBookData = inputField => {
     const url = `https://openlibrary.org/search.json?q=${inputField}`;
     fetch(url)
         .then(res => res.json())
         .then(data => displayBook(data.docs))
+        .catch(error => displayError(error));
+}
+// function for display error 
+const displayError = error => {
+    document.getElementById('error-message').style.display = 'block';
 }
 // function for displaying book 
 const displayBook = bookData => {
-    const books = bookData.slice(0, 18);
+    const books = bookData.slice(0, 21);
     const bookContainer = document.getElementById('book-container');
     books.forEach(book => {
         const { title, first_publish_year, cover_i } = book;
+        // set img url
         let url = `https://covers.openlibrary.org/b/id/${cover_i}-M.jpg`;
-        const imgNotFound = `https://covers.openlibrary.org/b/id/undefined-M.jpg`
+        const imgNotFound = `https://covers.openlibrary.org/b/id/undefined-M.jpg`;
         const coverImg = () => {
             if (url !== imgNotFound) {
                 const imgUral = url;
@@ -52,7 +82,7 @@ const displayBook = bookData => {
                 return bookAuthorName;
             } else {
                 book.author_name = 'Not Found';
-                return book.author_name
+                return book.author_name;
             }
         }
         // create a new div and add class col-lg-4
@@ -69,9 +99,10 @@ const displayBook = bookData => {
                 </div>
             </div>
         `
-        bookContainer.appendChild(col)
+        bookContainer.appendChild(col);
+        document.getElementById('book-search').style.display = 'block';
     })
-
+    document.getElementById('error-message').style.display = 'none';
 }
 
 
