@@ -19,9 +19,18 @@
         <div class="container">
             <!-- input field -->
             <div class="input-group mb-3 w-50 mx-auto mt-5">
-                <input type="text" class="form-control" placeholder="Search Book Name" aria-label="Search Book Name"
-                    aria-describedby="button-addon2">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+                <input id="input-field" type="text" class="form-control" placeholder="Search Book Name"
+                    aria-label="Search Book Name" aria-describedby="button-addon2">
+                <button onclick="loadData()" class="btn btn-outline-secondary" type="button"
+                    id="button-addon2">Search</button>
+            </div>
+            <!-- search book result -->
+            <div id="book-search">
+
+            </div>
+            <!-- book container -->
+            <div id="book-container" class="row">
+
             </div>
         </div>
     </section>
